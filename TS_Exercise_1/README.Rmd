@@ -40,11 +40,6 @@ DF1 <- DF1 %>%
 ```{r series plots}
 
 
-
-pacman::p_unload(stats)
-
-pacman::p_load(ggplot)
-
 ##{Spread} time path
 
 DF1 %>% ggplot() + # creates the 'canvas'
@@ -78,7 +73,7 @@ labs(title = "A simulated stationary ARMA(p,q) process (y)", y = "y", x = "Date"
 
 
 
-```{r ACF's and PACF's}
+```{r ACFs and PACFs}
 
  ##For the Spread series
 
@@ -101,14 +96,14 @@ type = "partial")
 
 ##For the y series
 
-# ACF(y)
+#ACF(y)
 
 y_acf <- stats::acf(
 x = y,
 plot = T, # automatically create a plot
 type = "correlation") # we want the standard AF
 
-# PACF(y)
+#PACF(y)
 
 y_pacf <- stats::acf(
 x = y,

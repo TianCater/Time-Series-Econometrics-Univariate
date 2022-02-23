@@ -4,15 +4,17 @@ README
 ``` r
 library(readxl)
 DF1 <- read_excel("data/TSexercise1data.xlsx")
-```
 
-``` r
+#load required packages
+
 pacman::p_load(dplyr,stats,fixest, tidyverse, huxtable, hrbrthemes, modelsummary, glue)
-```
 
-``` r
+#Isolate columns as numeric vectors/variables
+
 Spread <- DF1 %>% dplyr::select(spread)
 y <- DF1%>% dplyr::select(y)
+
+#VITAL, mutate dates to :Type Date
 
 DF1 <- DF1 %>%
    group_by(dates) %>%
@@ -20,42 +22,7 @@ DF1 <- DF1 %>%
 ```
 
 ``` r
-pacman::p_unload(stats)
-```
-
-    ## The following packages are a base install and will not be unloaded:
-    ## stats
-
-``` r
-pacman::p_load(ggplot)
-```
-
-    ## Installing package into 'C:/Users/tianc/OneDrive/Documents/R/win-library/4.1'
-    ## (as 'lib' is unspecified)
-
-    ## Warning: package 'ggplot' is not available for this version of R
-    ## 
-    ## A version of this package for your version of R might be available elsewhere,
-    ## see the ideas at
-    ## https://cran.r-project.org/doc/manuals/r-patched/R-admin.html#Installing-packages
-
-    ## Warning: unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.1:
-    ##   cannot open URL 'http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.1/PACKAGES'
-
-    ## Warning: 'BiocManager' not available.  Could not check Bioconductor.
-    ## 
-    ## Please use `install.packages('BiocManager')` and then retry.
-
-    ## Warning in p_install(package, character.only = TRUE, ...):
-
-    ## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
-    ## logical.return = TRUE, : there is no package called 'ggplot'
-
-    ## Warning in pacman::p_load(ggplot): Failed to install/load:
-    ## ggplot
-
-``` r
-##Spread series
+##{Spread} time path
 
 DF1 %>% ggplot() + # creates the 'canvas'
 theme_bw() + # choose on of many existing themes
@@ -73,7 +40,7 @@ labs(title = "Spread: 1 year and a 3 month US Treasury bill", y = "Spread", x = 
 ![](README_files/figure-gfm/series%20plots-1.png)<!-- -->
 
 ``` r
-##y series
+##{y} time path
 
 DF1 %>% ggplot() + # creates the 'canvas'
 theme_bw() + # choose on of many existing themes
@@ -103,7 +70,7 @@ plot = T, # automatically create a plot
 type = "correlation") # we want the standard AF
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](README_files/figure-gfm/ACFs%20and%20PACFs-1.png)<!-- -->
 
 ``` r
 #PACF(Spread)
@@ -114,12 +81,12 @@ plot = T,
 type = "partial") 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+![](README_files/figure-gfm/ACFs%20and%20PACFs-2.png)<!-- -->
 
 ``` r
 ##For the y series
 
-# ACF(y)
+#ACF(y)
 
 y_acf <- stats::acf(
 x = y,
@@ -127,10 +94,10 @@ plot = T, # automatically create a plot
 type = "correlation") # we want the standard AF
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-3.png)<!-- -->
+![](README_files/figure-gfm/ACFs%20and%20PACFs-3.png)<!-- -->
 
 ``` r
-# PACF(y)
+#PACF(y)
 
 y_pacf <- stats::acf(
 x = y,
@@ -138,4 +105,4 @@ plot = T,
 type = "partial")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-4.png)<!-- -->
+![](README_files/figure-gfm/ACFs%20and%20PACFs-4.png)<!-- -->
