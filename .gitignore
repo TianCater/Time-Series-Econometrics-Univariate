@@ -48,4 +48,5 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 
-TS_Exercise_1/data
+
+TS_Exercise_1/data/
