@@ -74,6 +74,9 @@ forecast::tsdisplay(TS_y)
 AR1 <- forecast::Arima(TS_spread,c(1,0,0))
 plot(TS_spread)
 lines(fitted(AR1), col='blue')
+
+###summary
+summary(AR1)
 ```
 
 
@@ -82,6 +85,9 @@ lines(fitted(AR1), col='blue')
 AR2 <- forecast::Arima(TS_spread,c(2,0,0))
 plot(TS_spread)
 lines(fitted(AR1), col='blue')
+
+###summary
+summary(AR2)
 ```
 
 
@@ -91,6 +97,9 @@ lines(fitted(AR1), col='blue')
 MA2 <- forecast::Arima(TS_spread,c(0,0,2))
 plot(TS_spread)
 lines(fitted(MA2), col='blue')
+
+###summary
+summary(MA2)
 ```
 
 
@@ -100,6 +109,9 @@ lines(fitted(MA2), col='blue')
 ARMA11 <- forecast::Arima(TS_spread,c(1,0,1))
 plot(TS_spread)
 lines(fitted(ARMA11),col='blue')
+
+###summary
+summary(ARMA11)
 ```
 
 
@@ -109,6 +121,9 @@ lines(fitted(ARMA11),col='blue')
 ARMA21 <- forecast::Arima(TS_spread,c(2,0,1))
 plot(TS_spread)
 lines(fitted(ARMA21),col='blue')
+
+###summary
+summary(ARMA21)
 ```
 
 
@@ -121,6 +136,8 @@ AR1_y <- forecast::Arima(TS_y,c(1,0,0))
 plot(TS_y)
 lines(fitted(AR1_y), col='blue')
 
+###summary
+summary(AR1_y)
 
 ```
 
@@ -130,6 +147,11 @@ lines(fitted(AR1_y), col='blue')
 AR2_y <- forecast::Arima(TS_y,c(2,0,0))
 plot(TS_y)
 lines(fitted(AR2_y), col='blue')
+
+###summary
+summary(AR2_y)
+
+
 ```
 
 
@@ -139,6 +161,10 @@ lines(fitted(AR2_y), col='blue')
 MA2_y <- forecast::Arima(TS_y,c(0,0,2))
 plot(TS_y)
 lines(fitted(MA2_y), col='blue')
+
+
+###summary
+summary(MA2_y)
 ```
 
 
@@ -148,6 +174,9 @@ lines(fitted(MA2_y), col='blue')
 ARMA11_y <- forecast::Arima(TS_y,c(1,0,1))
 plot(TS_y)
 lines(fitted(ARMA11_y),col='blue')
+
+###summary
+summary(ARMA11_y)
 ```
 
 
@@ -157,6 +186,9 @@ lines(fitted(ARMA11_y),col='blue')
 ARMA21_y <- forecast::Arima(TS_y,c(2,0,1))
 plot(TS_y)
 lines(fitted(ARMA21_y),col='blue')
+
+###summary
+summary(ARMA21_y)
 
 
 
