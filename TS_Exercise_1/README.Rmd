@@ -195,9 +195,33 @@ summary(ARMA21_y)
 ```
 
 
+For the Spread process, the ARMA(1,1) model has the lowest AIC and BIC values (-277.2 and -263.77, respectively)
+
+Fir the y process, the AR(1) model has the lowest AIC and BIC values (205.09 and 215.16, respectively)
+
+We select these models and  evaluate whether they are adequate, i.e is congruent and parsimonious. If the models are adequate, we present the estimated results of the best model and all necessary specification tests. 
+
+```{r}
+
+pacman::p_load(lmtest)
+regARMA11 <- arima(TS_spread,order = c(1,0,1))
 
 
+regARMA11
+
+coeftest(regARMA11)
+
+```
 
 
+```{r}
+
+regAR1 <- arima(TS_y,order=c(1,0,0))
+
+regAR1
+
+coeftest(regAR1)
+
+```
 
 

@@ -358,3 +358,14 @@ summary(ARMA21_y)
     ## Training set 0.0007307277 0.3863551 0.3159889 234.7491 349.2785 0.6362802
     ##                      ACF1
     ## Training set 0.0007207667
+
+For the Spread process, the ARMA(1,1) model has the lowest AIC and BIC
+values (-277.2 and -263.77, respectively)
+
+Fir the y process, the AR(1) model has the lowest AIC and BIC values
+(205.09 and 215.16, respectively)
+
+We select these models and evaluate whether they are adequate, i.e is
+congruent and parsimonious. If the models are adequate, we present the
+estimated results of the best model and all necessary specification
+tests.
