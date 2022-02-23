@@ -8,35 +8,33 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-```{r}
+```{r Data Loading and Cleaning}
+
+
 library(readxl)
 DF1 <- read_excel("data/TSexercise1data.xlsx")
 
-```
-
-
-
-
-```{r}
+#load required packages
 
 pacman::p_load(dplyr,stats,fixest, tidyverse, huxtable, hrbrthemes, modelsummary, glue)
 
-```
-
-
-
-
-```{r}
+#Isolate columns as numeric vectors/variables
 
 Spread <- DF1 %>% dplyr::select(spread)
 y <- DF1%>% dplyr::select(y)
+
+#VITAL, mutate dates to :Type Date
 
 DF1 <- DF1 %>%
    group_by(dates) %>%
    mutate(dates=as.Date(dates, format = "%Y.%m.%d"))
 
- 
+
+
 ```
+
+
+
 
 
 ```{r series plots}
@@ -47,7 +45,7 @@ pacman::p_unload(stats)
 
 pacman::p_load(ggplot)
 
-##Spread series
+##{Spread} time path
 
 DF1 %>% ggplot() + # creates the 'canvas'
 theme_bw() + # choose on of many existing themes
@@ -61,7 +59,7 @@ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
 # rotate x axis labels
 labs(title = "Spread: 1 year and a 3 month US Treasury bill", y = "Spread", x = "Date")
 
-##y series
+##{y} time path
 
 DF1 %>% ggplot() + # creates the 'canvas'
 theme_bw() + # choose on of many existing themes
@@ -80,7 +78,7 @@ labs(title = "A simulated stationary ARMA(p,q) process (y)", y = "y", x = "Date"
 
 
 
-```{r}
+```{r ACF's and PACF's}
 
  ##For the Spread series
 
