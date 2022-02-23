@@ -204,24 +204,44 @@ We select these models and  evaluate whether they are adequate, i.e is congruent
 ```{r}
 
 pacman::p_load(lmtest)
-regARMA11 <- arima(TS_spread,order = c(1,0,1))
 
+ARMA11 <- forecast::Arima(TS_spread,c(1,0,1))
 
-regARMA11
+ARMA11
 
-coeftest(regARMA11)
+coeftest(ARMA11)
 
 ```
 
 
 ```{r}
 
-regAR1 <- arima(TS_y,order=c(1,0,0))
+Res1 <- forecast::checkresiduals(ARMA11)
 
-regAR1
+pacman::p_load(tseries)
 
-coeftest(regAR1)
+jarque.bera.test(residuals(ARMA11))
 
 ```
 
+```{r}
+
+AR1_y <- forecast::Arima(TS_y,c(1,0,0))
+
+AR1_y
+
+coeftest(AR1_y)
+
+```
+
+
+```{r}
+
+Res2 <- forecast::checkresiduals(AR1_y)
+
+pacman::p_load(tseries)
+
+jarque.bera.test(residuals(AR1_y))
+
+```
 

@@ -369,3 +369,118 @@ We select these models and evaluate whether they are adequate, i.e is
 congruent and parsimonious. If the models are adequate, we present the
 estimated results of the best model and all necessary specification
 tests.
+
+``` r
+pacman::p_load(lmtest)
+
+ARMA11 <- forecast::Arima(TS_spread,c(1,0,1))
+
+ARMA11
+```
+
+    ## Series: TS_spread 
+    ## ARIMA(1,0,1) with non-zero mean 
+    ## 
+    ## Coefficients:
+    ##          ar1     ma1    mean
+    ##       0.8371  0.4199  0.1956
+    ## s.e.  0.0397  0.0679  0.0718
+    ## 
+    ## sigma^2 = 0.01532:  log likelihood = 142.6
+    ## AIC=-277.2   AICc=-277   BIC=-263.77
+
+``` r
+coeftest(ARMA11)
+```
+
+    ## 
+    ## z test of coefficients:
+    ## 
+    ##           Estimate Std. Error z value  Pr(>|z|)    
+    ## ar1       0.837088   0.039725 21.0719 < 2.2e-16 ***
+    ## ma1       0.419908   0.067912  6.1831 6.285e-10 ***
+    ## intercept 0.195605   0.071788  2.7248  0.006435 ** 
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+``` r
+Res1 <- forecast::checkresiduals(ARMA11)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+    ## 
+    ##  Ljung-Box test
+    ## 
+    ## data:  Residuals from ARIMA(1,0,1) with non-zero mean
+    ## Q* = 23.483, df = 21, p-value = 0.3188
+    ## 
+    ## Model df: 3.   Total lags used: 24
+
+``` r
+pacman::p_load(tseries)
+
+jarque.bera.test(residuals(ARMA11))
+```
+
+    ## 
+    ##  Jarque Bera Test
+    ## 
+    ## data:  residuals(ARMA11)
+    ## X-squared = 11.055, df = 2, p-value = 0.003976
+
+``` r
+AR1_y <- forecast::Arima(TS_y,c(1,0,0))
+
+AR1_y
+```
+
+    ## Series: TS_y 
+    ## ARIMA(1,0,0) with non-zero mean 
+    ## 
+    ## Coefficients:
+    ##          ar1    mean
+    ##       0.4941  0.5072
+    ## s.e.  0.0599  0.0523
+    ## 
+    ## sigma^2 = 0.151:  log likelihood = -99.55
+    ## AIC=205.09   AICc=205.21   BIC=215.16
+
+``` r
+coeftest(AR1_y)
+```
+
+    ## 
+    ## z test of coefficients:
+    ## 
+    ##           Estimate Std. Error z value  Pr(>|z|)    
+    ## ar1       0.494074   0.059856  8.2544 < 2.2e-16 ***
+    ## intercept 0.507176   0.052261  9.7047 < 2.2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+``` r
+Res2 <- forecast::checkresiduals(AR1_y)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+    ## 
+    ##  Ljung-Box test
+    ## 
+    ## data:  Residuals from ARIMA(1,0,0) with non-zero mean
+    ## Q* = 23.821, df = 22, p-value = 0.3567
+    ## 
+    ## Model df: 2.   Total lags used: 24
+
+``` r
+pacman::p_load(tseries)
+
+jarque.bera.test(residuals(AR1_y))
+```
+
+    ## 
+    ##  Jarque Bera Test
+    ## 
+    ## data:  residuals(AR1_y)
+    ## X-squared = 1.8101, df = 2, p-value = 0.4045
