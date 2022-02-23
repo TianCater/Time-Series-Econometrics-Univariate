@@ -33,10 +33,33 @@ DF1 <- DF1 %>%
 
 Date <- DF1 %>% dplyr::select(dates)
 
-TS_spread <- ts(Spread,start=c(1984,1,1),end = c(2008,8,1),frequency = 12)
 
-TS_y <-  ts(y,start=c(1984,1,1),end = c(2008,8,1),frequency = 12)
+```
 
+
+
+```{r generating the variables as time series}
+
+
+TS_spread <- ts(Spread,start=c(1984,1,1),end = c(2001,8,1),frequency = 12)
+
+TS_y <-  ts(y,start=c(1984,1,1),end = c(2001,8,1),frequency = 12)
+
+
+```
+
+
+
+```{r Plot ACF and PACF}
+
+##Plot,ACF and PACF for {Spread}
+
+forecast::tsdisplay(TS_spread)
+
+
+##Plot,ACF and PACF for {y}
+
+forecast::tsdisplay(TS_y)
 
 ```
 
@@ -44,87 +67,9 @@ TS_y <-  ts(y,start=c(1984,1,1),end = c(2008,8,1),frequency = 12)
 
 
 
-```{r series plots}
-
-
-##{Spread} time path
-
-DF1 %>% ggplot() + # creates the 'canvas'
-theme_bw() + # choose on of many existing themes
-geom_line(aes(x = dates, y = spread), size = 1, alpha = 0.9, color = "darkgreen") +
-# creates the line on the canvas with aes() coordinates
-geom_point(aes(x = dates, y = spread), size = 2, alpha = 0.9, color = "darkgreen") +
-# similarly for points
-scale_x_date(date_labels = "'%y", date_breaks = "year") +
-# make x axis labels
-theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-# rotate x axis labels
-labs(title = "Spread: 1 year and a 3 month US Treasury bill", y = "Spread", x = "Date")
-
-##{y} time path
-
-DF1 %>% ggplot() + # creates the 'canvas'
-theme_bw() + # choose on of many existing themes
-geom_line(aes(x = dates, y = y), size = 1, alpha = 0.9, color = "darkgreen") +
-# creates the line on the canvas with aes() coordinates
-geom_point(aes(x = dates, y = y), size = 2, alpha = 0.9, color = "darkgreen") +
-# similarly for points
-scale_x_date(date_labels = "'%y", date_breaks = "year") +
-# make x axis labels
-theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-# rotate x axis labels
-labs(title = "A simulated stationary ARMA(p,q) process (y)", y = "y", x = "Date")
-
-
-```
-
-
-
-```{r ACFs and PACFs}
-
- ##For the Spread series
-
-pacman::p_load(stats)
-
-# ACF(Spread)
- 
-Spread_acf <- stats::acf(
-x = Spread,
-plot = T, # automatically create a plot
-type = "correlation") # we want the standard AF
-
-#PACF(Spread)
-
-Spread_pacf <- stats::acf(
-x = Spread,
-plot = T, 
-type = "partial") 
-
-
-##For the y series
-
-#ACF(y)
-
-y_acf <- stats::acf(
-x = y,
-plot = T, # automatically create a plot
-type = "correlation") # we want the standard AF
-
-#PACF(y)
-
-y_pacf <- stats::acf(
-x = y,
-plot = T, 
-type = "partial")
-
-```
 
 
 
 
 
-```{r}
-MA2 <- forecast::Arima(DF1,c(0,0,2))
-
-```
 
