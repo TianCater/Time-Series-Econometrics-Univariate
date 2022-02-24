@@ -8,6 +8,20 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
+The purpose of this assignment is to find the best univariate, linear, stochastic model (BULSM) for two given time series using the Box-Jenkins methodology. {Spread} refers to the time series spread between a 1 year and a 3 month US Treasury bill, and {y} a simulated stationary ARMA(p,q) process. 
+
+The analysis for each series will be structured as follows:
+
+1. Present basic first step analysis. (Plot, ACF, PACF with interpretations and conclusions)
+2. Investigate the following models for potential BULSM: AR(1), AR(2), MA(2), ARMA(1,1), ARMA(2,1). This includes selecting the best model according to the AIC    & BIC measures.
+3. Evaluate whether the selected model is adequate. That is, whether the selected model is both:
+  3.1. Congruent. 
+       Require the residuals to be white noise. Autocorrelation test (Ljung Box test) and normality (Jarque-Bera test).
+  3.2. Parsimonious 
+       The first requirement is that the estimates be statistically significant. 
+4. Conclude with the estimated results of the BULSM.
+
+##Importing and structuring the data
 ```{r Data Loading and Cleaning}
 
 
@@ -50,6 +64,10 @@ TS_y <-  ts(y,start=c(1984,1,1),end = c(2001,8,1),frequency = 12)
 
 
 
+############################{Spread}#########################
+
+1. Present basic first step analysis. (Plot, ACF, PACF with interpretations and conclusions)
+
 ```{r Plot ACF and PACF}
 
 ##Plot,ACF and PACF for {Spread}
@@ -57,13 +75,10 @@ TS_y <-  ts(y,start=c(1984,1,1),end = c(2001,8,1),frequency = 12)
 forecast::tsdisplay(TS_spread)
 
 
-##Plot,ACF and PACF for {y}
-
-forecast::tsdisplay(TS_y)
-
 ```
 
 
+2. Investigate the following models for potential BULSM: AR(1), AR(2), MA(2), ARMA(1,1), ARMA(2,1). This includes selecting the best model according to the AIC    & BIC measures.
 
 ```{r Investigating and fitting different models for each process}
 
@@ -125,6 +140,101 @@ lines(fitted(ARMA21),col='blue')
 ###summary
 summary(ARMA21)
 ```
+
+
+  For the Spread process, the ARMA(1,1) model has the lowest AIC and BIC values (-277.2 and -263.77, respectively)
+
+
+3. Evaluate whether the selected model is adequate. That is, whether the selected model is both:
+  3.1. Congruent. 
+       Require the residuals to be white noise. Autocorrelation test (Ljung Box test) and normality (Jarque-Bera test).
+       
+```{r}
+
+pacman::p_load(lmtest)
+
+ARMA11 <- forecast::Arima(TS_spread,c(1,0,1))
+
+ARMA11
+
+coeftest(ARMA11)
+
+```
+
+       
+```{r}
+
+Res1 <- forecast::checkresiduals(ARMA11, lag = 20)
+
+
+pacman::p_load(tseries)
+
+jarque.bera.test(residuals(ARMA11))
+
+```
+       
+       
+       
+The corelogram (ACF) of the residuals does indeed look like a realisation of discrete white noise. Finally, we perform the Ljung-Box test for 20 lags to confirm this:
+
+##Ljung Box Test (i.i.d- the independent part)
+
+The Ljung Box test  is a way to test for the absence of serial autocorrelation, up to a specified lag k. Therefore the bigger the lag the better- not sure about this.
+
+The test determines whether or not errors are iid (i.e. white noise) or whether there is something more behind them; whether or not the autocorrelations for the errors or residuals are non zero. Essentially, it is a test of lack of fit: if the autocorrelations of the residuals are very small, we say that the model doesn’t show ‘significant lack of fit’.
+
+                 H0= No serial correlation between residuals (independence)
+                 H1= Serial correlation between residuals (dependence)
+            
+
+            
+A p-value > 0.05 means we fail to reject the null at the. Since the p-value is greater than 0.05,  the residuals are independent at the 95% level and thus an ARMA(1,1) model provides a good model fit (by the measure of autocorrelation between residuals).
+
+When the Ljung Box test is applied to the residuals of an ARIMA model, the degrees of freedom  must be equal to m-p-q-1, where where m is the time lag, and p and q are the number of parameters in the ARIMA(p,q) model. The automated df by R is therefore (20-2)=17.
+
+###{y}
+
+The p-value=0.373 > 0.05 means we fail to reject the null. Therefore the residuals are independent at the 95% level and thus an ARMA(1,1) model provides a good model fit (by the measure of autocorrelation between residuals).
+       
+       
+##Jarque Bera Test (i.i.d - the identically distributed part)
+
+The Jarque-Bera test is a goodness-of-fit test that determines whether or not sample data have skewness and kurtosis that matches a normal distribution. A normal distribution has a skew of zero (i.e. it’s perfectly symmetrical around the mean) and a kurtosis of three; kurtosis tells you how much data is in the tails and gives you an idea about how “peaked” the distribution is.
+
+Therefore, we are testing against the null hypothesis that the residuals are normally distributed (i.e white noise) at the 5% significance level. If the p-value < 0.05, we reject the null that the residuals are white noise. 
+
+            H0= Residuals are normally distributed (i.e white noise)
+            H1= Residuals are not normally distributed (i.e not white noise)
+            
+
+
+The p-value = 0.003976 < 0.05 means we reject the null hypothesis at the 5% significance level. That is, the residuals are not white noise. 
+
+ 
+
+       
+       
+       
+       
+  3.2. Parsimonious 
+       The first requirement is that the estimates be statistically significant. 
+4. Conclude with the estimated results of the BULSM.
+
+
+############################{y}##############################
+
+1. Present basic first step analysis. (Plot, ACF, PACF with interpretations and conclusions)
+
+```{r Plot ACF and PACF}
+
+##Plot,ACF and PACF for {y}
+
+forecast::tsdisplay(TS_y)
+
+```
+
+
+2. Investigate the following models for potential BULSM: AR(1), AR(2), MA(2), ARMA(1,1), ARMA(2,1). This includes selecting the best model according to the AIC    & BIC measures.
 
 
 ```{r }
@@ -195,75 +305,14 @@ summary(ARMA21_y)
 ```
 
 
-For the Spread process, the ARMA(1,1) model has the lowest AIC and BIC values (-277.2 and -263.77, respectively)
-
-Fir the y process, the AR(1) model has the lowest AIC and BIC values (205.09 and 215.16, respectively)
-
-We select these models and  evaluate whether they are adequate, i.e is congruent and parsimonious. If the models are adequate, we present the estimated results of the best model and all necessary specification tests. 
-
-```{r}
-
-pacman::p_load(lmtest)
-
-ARMA11 <- forecast::Arima(TS_spread,c(1,0,1))
-
-ARMA11
-
-coeftest(ARMA11)
-
-```
+  For the y process, the AR(1) model has the lowest AIC and BIC values (205.09 and 215.16, respectively)
 
 
-```{r}
 
-Res1 <- forecast::checkresiduals(ARMA11, lag = 20)
-
-
-pacman::p_load(tseries)
-
-jarque.bera.test(residuals(ARMA11))
-
-```
-
-The corelogram (ACF) of the residuals does indeed look like a realisation of discrete white noise. Finally, we perform the Ljung-Box test for 20 lags to confirm this:
-
-##Ljung Box Test (i.i.d- the independent part)
-
-The Ljung Box test  is a way to test for the absence of serial autocorrelation, up to a specified lag k. Therefore the bigger the lag the better- not sure about this.
-
-The test determines whether or not errors are iid (i.e. white noise) or whether there is something more behind them; whether or not the autocorrelations for the errors or residuals are non zero. Essentially, it is a test of lack of fit: if the autocorrelations of the residuals are very small, we say that the model doesn’t show ‘significant lack of fit’.
-
-            H0= No serial correlation between residuals (independence)
-            H1= Serial correlation between residuals (dependence)
-            
-###{Spread}
-            
-A p-value > 0.05 means we fail to reject the null at the. Since the p-value is greater than 0.05,  the residuals are independent at the 95% level and thus an ARMA(1,1) model provides a good model fit (by the measure of autocorrelation between residuals).
-
-When the Ljung Box test is applied to the residuals of an ARIMA model, the degrees of freedom  must be equal to m-p-q-1, where where m is the time lag, and p and q are the number of parameters in the ARIMA(p,q) model. The automated df by R is therefore (20-2)=17.
-
-###{y}
-
-The p-value=0.373 > 0.05 means we fail to reject the null. Therefore the residuals are independent at the 95% level and thus an ARMA(1,1) model provides a good model fit (by the measure of autocorrelation between residuals).
-
-
-##Jarque Bera Test (i.i.d - the identically distributed part)
-
-The Jarque-Bera test is a goodness-of-fit test that determines whether or not sample data have skewness and kurtosis that matches a normal distribution. A normal distribution has a skew of zero (i.e. it’s perfectly symmetrical around the mean) and a kurtosis of three; kurtosis tells you how much data is in the tails and gives you an idea about how “peaked” the distribution is.
-
-Therefore, we are testing against the null hypothesis that the residuals are normally distributed (i.e white noise) at the 5% significance level. If the p-value < 0.05, we reject the null that the residuals are white noise. 
-
-            H0= Residuals are normally distributed (i.e white noise)
-            H1= Residuals are not normally distributed (i.e not white noise)
-            
-###{Spread}
-
-The p-value = 0.003976 < 0.05 means we reject the null hypothesis at the 5% significance level. That is, the residuals are not white noise. 
-
-###{y}
-
-The p-value = 0.4045 > 0.05 means we fail to reject the null at the 5% significance level. That is, the residuals are white noise 
-
+3. Evaluate whether the selected model is adequate. That is, whether the selected model is both:
+  3.1. Congruent 
+       Require the residuals to be white noise. Test for autocorrelation (Ljung Box test) and non-normality (Jarque-Bera test).
+       
 ```{r}
 
 AR1_y <- forecast::Arima(TS_y,c(1,0,0))
@@ -284,6 +333,74 @@ pacman::p_load(tseries)
 jarque.bera.test(residuals(AR1_y))
 
 ```
+       
+##Ljung Box Test (i.i.d- the independent part)
+
+The Ljung Box test  is a way to test for the absence of serial autocorrelation, up to a specified lag k. Therefore the bigger the lag the better- not sure about this.
+
+The test determines whether or not errors are iid (i.e. white noise) or whether there is something more behind them; whether or not the autocorrelations for the errors or residuals are non zero. Essentially, it is a test of lack of fit: if the autocorrelations of the residuals are very small, we say that the model doesn’t show ‘significant lack of fit’.
+
+            H0= No serial correlation between residuals (independence)
+            H1= Serial correlation between residuals (dependence)       
+
+
+The p-value=0.373 > 0.05 means we fail to reject the null. Therefore the residuals are independent at the 95% level and thus an ARMA(1,1) model provides a good model fit (by the measure of autocorrelation between residuals).
+
+
+##Jarque Bera Test (i.i.d - the identically distributed part)
+
+The Jarque-Bera test is a goodness-of-fit test that determines whether or not sample data have skewness and kurtosis that matches a normal distribution. A normal distribution has a skew of zero (i.e. it’s perfectly symmetrical around the mean) and a kurtosis of three; kurtosis tells you how much data is in the tails and gives you an idea about how “peaked” the distribution is.
+
+Therefore, we are testing against the null hypothesis that the residuals are normally distributed (i.e white noise) at the 5% significance level. If the p-value < 0.05, we reject the null that the residuals are white noise. 
+
+            H0= Residuals are normally distributed (i.e white noise)
+            H1= Residuals are not normally distributed (i.e not white noise)
+            
+
+
+The p-value = 0.4045 > 0.05 means we fail to reject the null at the 5% significance level. That is, the residuals are white noise 
+
+      
+       
+  3.2. Parsimonious 
+       The first requirement is that the estimates be statistically significant. 
+4. Conclude with the estimated results of the BULSM.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -301,16 +418,16 @@ According to the Hyndman-Khandakar algorithm (Hyndman & Khandakar, 2008), the be
 We select the seasonal ARMA(3,1)(1,1) model and accordingly conduct the required tests for adequacy.
 
 ```{r}
-ARMA23 <-  forecast::Arima(TS_spread, order=c(3,0,0), seasonal = c(1,0,1))
+ARMA31_11 <-  forecast::Arima(TS_spread, order=c(3,0,0), seasonal = c(1,0,1))
 
-coeftest(ARMA23)
+coeftest(ARMA31_11)
 
-forecast::checkresiduals(ARMA23, lag = 20)
+forecast::checkresiduals(ARMA31_11, lag = 20)
 
 
 pacman::p_load(tseries)
 
-jarque.bera.test(residuals(ARMA23))
+jarque.bera.test(residuals(ARMA31_11))
 ```
 
 
