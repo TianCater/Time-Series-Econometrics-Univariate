@@ -296,7 +296,7 @@ AA_spread <- auto.arima(TS_spread, seasonal= TRUE,stationary = TRUE, stepwise = 
 AA_spread
 
 ```
-According to the Hyndman-Khandakar algorithm (Hyndman & Khandakar, 2008), the best model fit (provided the criterion that they are stationary and non-seasonal) would be an seasonal ARMA(3,1)(1,1) model. Therefore 
+According to the Hyndman-Khandakar algorithm (Hyndman & Khandakar, 2008), the best model fit (provided the criterion that they are stationary) would be an seasonal ARMA(3,1)(1,1) model. Therefore 
 
 We select the seasonal ARMA(3,1)(1,1) model and accordingly conduct the required tests for adequacy.
 
