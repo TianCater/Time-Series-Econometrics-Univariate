@@ -370,6 +370,9 @@ The p-value = 0.4045 > 0.05 means we fail to reject the null at the 5% significa
        
   3.2. Parsimonious 
        The first requirement is that the estimates be statistically significant. 
+       
+       
+       
 4. Conclude with the estimated results of the BULSM.
 
 
