@@ -30,7 +30,7 @@ DF1 <- read_excel("data/TSexercise1data.xlsx")
 
 #load required packages
 
-pacman::p_load(dplyr,stats,fixest, tidyverse, huxtable, hrbrthemes, modelsummary, glue,forecast)
+pacman::p_load(dplyr,stats,fixest, tidyverse, huxtable, hrbrthemes, modelsummary, glue,forecast, FinTS)
 
 #Isolate columns as numeric vectors/variables
 
@@ -168,6 +168,8 @@ Res1 <- forecast::checkresiduals(ARMA11, lag = 20)
 
 
 pacman::p_load(tseries)
+
+ArchTest(residuals(ARMA11))
 
 jarque.bera.test(residuals(ARMA11))
 
@@ -330,6 +332,10 @@ Res2 <- forecast::checkresiduals(AR1_y, lag=20)
 
 pacman::p_load(tseries)
 
+pacman::p_load(FinTS)
+
+ArchTest(residuals(AR1_y))
+
 jarque.bera.test(residuals(AR1_y))
 
 ```
@@ -424,6 +430,7 @@ coeftest(ARMA31_11)
 
 forecast::checkresiduals(ARMA31_11, lag = 20)
 
+ArchTest(residuals(ARMA31_11))
 
 pacman::p_load(tseries)
 
