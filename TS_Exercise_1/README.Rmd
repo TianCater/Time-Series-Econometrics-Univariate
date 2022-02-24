@@ -68,7 +68,7 @@ TS_y <-  ts(y,start=c(1984,1,1),end = c(2001,8,1),frequency = 12)
 
 1. Present basic first step analysis. (Plot, ACF, PACF with interpretations and conclusions)
 
-```{r Plot ACF and PACF}
+```{r Plot ACF PACF}
 
 ##Plot,ACF and PACF for {Spread}
 
