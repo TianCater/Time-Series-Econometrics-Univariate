@@ -216,7 +216,7 @@ coeftest(ARMA11)
 
 ```{r}
 
-Res1 <- forecast::checkresiduals(ARMA11, lag = 12, df= 11)
+Res1 <- forecast::checkresiduals(ARMA11, lag = 20 )
 
 pacman::p_load(tseries)
 
@@ -237,7 +237,7 @@ coeftest(AR1_y)
 
 ```{r}
 
-Res2 <- forecast::checkresiduals(AR1_y, lag=12, df=9)
+Res2 <- forecast::checkresiduals(AR1_y, lag=20)
 
 pacman::p_load(tseries)
 

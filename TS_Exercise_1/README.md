@@ -404,7 +404,7 @@ coeftest(ARMA11)
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
-Res1 <- forecast::checkresiduals(ARMA11)
+Res1 <- forecast::checkresiduals(ARMA11, lag = 20 )
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
@@ -413,9 +413,9 @@ Res1 <- forecast::checkresiduals(ARMA11)
     ##  Ljung-Box test
     ## 
     ## data:  Residuals from ARIMA(1,0,1) with non-zero mean
-    ## Q* = 23.483, df = 21, p-value = 0.3188
+    ## Q* = 22.435, df = 17, p-value = 0.1686
     ## 
-    ## Model df: 3.   Total lags used: 24
+    ## Model df: 3.   Total lags used: 20
 
 ``` r
 pacman::p_load(tseries)
@@ -460,7 +460,7 @@ coeftest(AR1_y)
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
-Res2 <- forecast::checkresiduals(AR1_y)
+Res2 <- forecast::checkresiduals(AR1_y, lag=20)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
@@ -469,9 +469,9 @@ Res2 <- forecast::checkresiduals(AR1_y)
     ##  Ljung-Box test
     ## 
     ## data:  Residuals from ARIMA(1,0,0) with non-zero mean
-    ## Q* = 23.821, df = 22, p-value = 0.3567
+    ## Q* = 19.31, df = 18, p-value = 0.373
     ## 
-    ## Model df: 2.   Total lags used: 24
+    ## Model df: 2.   Total lags used: 20
 
 ``` r
 pacman::p_load(tseries)
