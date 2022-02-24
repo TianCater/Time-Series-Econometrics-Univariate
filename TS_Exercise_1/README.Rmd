@@ -224,6 +224,10 @@ jarque.bera.test(residuals(ARMA11))
 
 ```
 
+The corelogram (ACF) of the residuals does indeed look like a realisation of discrete white noise. Finally, we perform the Ljung-Box test for 20 lags to confirm this:
+
+For Box-Ljung test Notice that the p-value is greater than 0.05, which states that the residuals are independent at the 95% level and thus an ARMA(1,1) model provides a good model fit.
+
 ```{r}
 
 AR1_y <- forecast::Arima(TS_y,c(1,0,0))
@@ -244,4 +248,9 @@ pacman::p_load(tseries)
 jarque.bera.test(residuals(AR1_y))
 
 ```
+
+
+
+
+
 
