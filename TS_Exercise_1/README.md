@@ -404,7 +404,7 @@ coeftest(ARMA11)
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
-Res1 <- forecast::checkresiduals(ARMA11, lag = 20 , df)
+Res1 <- forecast::checkresiduals(ARMA11, lag = 20)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
@@ -433,7 +433,7 @@ The corelogram (ACF) of the residuals does indeed look like a
 realisation of discrete white noise. Finally, we perform the Ljung-Box
 test for 20 lags to confirm this:
 
-##Ljung Box Test
+##Ljung Box Test (i.i.d- the independent part)
 
 The Ljung Box test is a way to test for the absence of serial
 autocorrelation, up to a specified lag k. Therefore the bigger the lag
@@ -446,15 +446,16 @@ it is a test of lack of fit: if the autocorrelations of the residuals
 are very small, we say that the model doesn’t show ‘significant lack of
 fit’.
 
-            H0= No serial correlation between residuals 
-            H1= Serial correlation between residuals
+            H0= No serial correlation between residuals (independence)
+            H1= Serial correlation between residuals (dependence)
             
 
 ###{Spread}
 
 A p-value \> 0.05 means we fail to reject the null at the. Since the
 p-value is greater than 0.05, the residuals are independent at the 95%
-level and thus an ARMA(1,1) model provides a good model fit.
+level and thus an ARMA(1,1) model provides a good model fit (by the
+measure of autocorrelation between residuals).
 
 When the Ljung Box test is applied to the residuals of an ARIMA model,
 the degrees of freedom must be equal to m-p-q-1, where where m is the
@@ -463,14 +464,24 @@ model. The automated df by R is therefore (20-2)=17.
 
 ###{y}
 
-##Jarque Bera Test
+The p-value=0.373 \> 0.05 means we fail to reject the null. Therefore
+the residuals are independent at the 95% level and thus an ARMA(1,1)
+model provides a good model fit (by the measure of autocorrelation
+between residuals).
+
+##Jarque Bera Test (i.i.d - the identically distributed part)
 
 The Jarque-Bera test is a goodness-of-fit test that determines whether
 or not sample data have skewness and kurtosis that matches a normal
-distribution. Therefore, we are testing against the null hypothesis that
-the residuals are normally distributed (i.e white noise) at the 5%
-significance level. If the p-value \< 0.05, we reject the null that the
-residuals are white noise.
+distribution. A normal distribution has a skew of zero (i.e. it’s
+perfectly symmetrical around the mean) and a kurtosis of three; kurtosis
+tells you how much data is in the tails and gives you an idea about how
+“peaked” the distribution is.
+
+Therefore, we are testing against the null hypothesis that the residuals
+are normally distributed (i.e white noise) at the 5% significance level.
+If the p-value \< 0.05, we reject the null that the residuals are white
+noise.
 
             H0= Residuals are normally distributed (i.e white noise)
             H1= Residuals are not normally distributed (i.e not white noise)
@@ -478,7 +489,13 @@ residuals are white noise.
 
 ###{Spread}
 
+The p-value = 0.003976 \< 0.05 means we reject the null hypothesis at
+the 5% significance level. That is, the residuals are not white noise.
+
 ###{y}
+
+The p-value = 0.4045 \> 0.05 means we fail to reject the null at the 5%
+significance level. That is, the residuals are white noise
 
 ``` r
 AR1_y <- forecast::Arima(TS_y,c(1,0,0))
@@ -535,3 +552,76 @@ jarque.bera.test(residuals(AR1_y))
     ## 
     ## data:  residuals(AR1_y)
     ## X-squared = 1.8101, df = 2, p-value = 0.4045
+
+###I will now use the auto.Arima() function. The auto.arima() function
+in R uses a variation of the Hyndman-Khandakar algorithm (Hyndman &
+Khandakar, 2008), which combines unit root tests, minimisation of the
+AICc and MLE to obtain an ARIMA model.
+
+``` r
+AA_spread <- auto.arima(TS_spread, seasonal= TRUE,stationary = TRUE, stepwise = TRUE, approximation = FALSE, allowdrift = TRUE)
+AA_spread
+```
+
+    ## Series: TS_spread 
+    ## ARIMA(3,0,0)(1,0,1)[12] with non-zero mean 
+    ## 
+    ## Coefficients:
+    ##          ar1      ar2     ar3     sar1    sma1    mean
+    ##       1.2543  -0.5748  0.2204  -0.6855  0.8187  0.1899
+    ## s.e.  0.0684   0.1028  0.0668   0.1727  0.1389  0.0860
+    ## 
+    ## sigma^2 = 0.01492:  log likelihood = 146.3
+    ## AIC=-278.61   AICc=-278.06   BIC=-255.11
+
+According to the Hyndman-Khandakar algorithm (Hyndman & Khandakar,
+2008), the best model fit (provided the criterion that they are
+stationary) would be an seasonal ARMA(3,1)(1,1) model. Therefore
+
+We select the seasonal ARMA(3,1)(1,1) model and accordingly conduct the
+required tests for adequacy.
+
+``` r
+ARMA23 <-  forecast::Arima(TS_spread, order=c(3,0,0), seasonal = c(1,0,1))
+
+coeftest(ARMA23)
+```
+
+    ## 
+    ## z test of coefficients:
+    ## 
+    ##            Estimate Std. Error z value  Pr(>|z|)    
+    ## ar1        1.254306   0.068450 18.3245 < 2.2e-16 ***
+    ## ar2       -0.574845   0.102815 -5.5911 2.257e-08 ***
+    ## ar3        0.220425   0.066768  3.3014 0.0009622 ***
+    ## sar1      -0.685502   0.172717 -3.9689 7.220e-05 ***
+    ## sma1       0.818745   0.138936  5.8930 3.793e-09 ***
+    ## intercept  0.189851   0.086010  2.2073 0.0272926 *  
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+``` r
+forecast::checkresiduals(ARMA23, lag = 20)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+    ## 
+    ##  Ljung-Box test
+    ## 
+    ## data:  Residuals from ARIMA(3,0,0)(1,0,1)[12] with non-zero mean
+    ## Q* = 19.45, df = 14, p-value = 0.1485
+    ## 
+    ## Model df: 6.   Total lags used: 20
+
+``` r
+pacman::p_load(tseries)
+
+jarque.bera.test(residuals(ARMA23))
+```
+
+    ## 
+    ##  Jarque Bera Test
+    ## 
+    ## data:  residuals(ARMA23)
+    ## X-squared = 8.2545, df = 2, p-value = 0.01613
