@@ -216,7 +216,8 @@ coeftest(ARMA11)
 
 ```{r}
 
-Res1 <- forecast::checkresiduals(ARMA11, lag = 20 )
+Res1 <- forecast::checkresiduals(ARMA11, lag = 20)
+
 
 pacman::p_load(tseries)
 
@@ -226,7 +227,42 @@ jarque.bera.test(residuals(ARMA11))
 
 The corelogram (ACF) of the residuals does indeed look like a realisation of discrete white noise. Finally, we perform the Ljung-Box test for 20 lags to confirm this:
 
-For Box-Ljung test Notice that the p-value is greater than 0.05, which states that the residuals are independent at the 95% level and thus an ARMA(1,1) model provides a good model fit.
+##Ljung Box Test (i.i.d- the independent part)
+
+The Ljung Box test  is a way to test for the absence of serial autocorrelation, up to a specified lag k. Therefore the bigger the lag the better- not sure about this.
+
+The test determines whether or not errors are iid (i.e. white noise) or whether there is something more behind them; whether or not the autocorrelations for the errors or residuals are non zero. Essentially, it is a test of lack of fit: if the autocorrelations of the residuals are very small, we say that the model doesn’t show ‘significant lack of fit’.
+
+            H0= No serial correlation between residuals (independence)
+            H1= Serial correlation between residuals (dependence)
+            
+###{Spread}
+            
+A p-value > 0.05 means we fail to reject the null at the. Since the p-value is greater than 0.05,  the residuals are independent at the 95% level and thus an ARMA(1,1) model provides a good model fit (by the measure of autocorrelation between residuals).
+
+When the Ljung Box test is applied to the residuals of an ARIMA model, the degrees of freedom  must be equal to m-p-q-1, where where m is the time lag, and p and q are the number of parameters in the ARIMA(p,q) model. The automated df by R is therefore (20-2)=17.
+
+###{y}
+
+The p-value=0.373 > 0.05 means we fail to reject the null. Therefore the residuals are independent at the 95% level and thus an ARMA(1,1) model provides a good model fit (by the measure of autocorrelation between residuals).
+
+
+##Jarque Bera Test (i.i.d - the identically distributed part)
+
+The Jarque-Bera test is a goodness-of-fit test that determines whether or not sample data have skewness and kurtosis that matches a normal distribution. A normal distribution has a skew of zero (i.e. it’s perfectly symmetrical around the mean) and a kurtosis of three; kurtosis tells you how much data is in the tails and gives you an idea about how “peaked” the distribution is.
+
+Therefore, we are testing against the null hypothesis that the residuals are normally distributed (i.e white noise) at the 5% significance level. If the p-value < 0.05, we reject the null that the residuals are white noise. 
+
+            H0= Residuals are normally distributed (i.e white noise)
+            H1= Residuals are not normally distributed (i.e not white noise)
+            
+###{Spread}
+
+The p-value = 0.003976 < 0.05 means we reject the null hypothesis at the 5% significance level. That is, the residuals are not white noise. 
+
+###{y}
+
+The p-value = 0.4045 > 0.05 means we fail to reject the null at the 5% significance level. That is, the residuals are white noise 
 
 ```{r}
 
@@ -247,6 +283,34 @@ pacman::p_load(tseries)
 
 jarque.bera.test(residuals(AR1_y))
 
+```
+
+
+
+###I will now use the auto.Arima() function. The auto.arima() function in R uses a variation of the Hyndman-Khandakar algorithm (Hyndman & Khandakar, 2008), which combines unit root tests, minimisation of the AICc and MLE to obtain an ARIMA model. 
+
+
+```{r a second attemp for spread}
+
+AA_spread <- auto.arima(TS_spread, seasonal= TRUE,stationary = TRUE, stepwise = TRUE, approximation = FALSE, allowdrift = TRUE)
+AA_spread
+
+```
+According to the Hyndman-Khandakar algorithm (Hyndman & Khandakar, 2008), the best model fit (provided the criterion that they are stationary and non-seasonal) would be an seasonal ARMA(3,1)(1,1) model. Therefore 
+
+We select the seasonal ARMA(3,1)(1,1) model and accordingly conduct the required tests for adequacy.
+
+```{r}
+ARMA23 <-  forecast::Arima(TS_spread, order=c(3,0,0), seasonal = c(1,0,1))
+
+coeftest(ARMA23)
+
+forecast::checkresiduals(ARMA23, lag = 20)
+
+
+pacman::p_load(tseries)
+
+jarque.bera.test(residuals(ARMA23))
 ```
 
 

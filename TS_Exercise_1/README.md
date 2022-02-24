@@ -404,7 +404,7 @@ coeftest(ARMA11)
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
-Res1 <- forecast::checkresiduals(ARMA11, lag = 20 )
+Res1 <- forecast::checkresiduals(ARMA11, lag = 20 , df)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
@@ -428,6 +428,57 @@ jarque.bera.test(residuals(ARMA11))
     ## 
     ## data:  residuals(ARMA11)
     ## X-squared = 11.055, df = 2, p-value = 0.003976
+
+The corelogram (ACF) of the residuals does indeed look like a
+realisation of discrete white noise. Finally, we perform the Ljung-Box
+test for 20 lags to confirm this:
+
+##Ljung Box Test
+
+The Ljung Box test is a way to test for the absence of serial
+autocorrelation, up to a specified lag k. Therefore the bigger the lag
+the better- not sure about this.
+
+The test determines whether or not errors are iid (i.e. white noise) or
+whether there is something more behind them; whether or not the
+autocorrelations for the errors or residuals are non zero. Essentially,
+it is a test of lack of fit: if the autocorrelations of the residuals
+are very small, we say that the model doesn’t show ‘significant lack of
+fit’.
+
+            H0= No serial correlation between residuals 
+            H1= Serial correlation between residuals
+            
+
+###{Spread}
+
+A p-value \> 0.05 means we fail to reject the null at the. Since the
+p-value is greater than 0.05, the residuals are independent at the 95%
+level and thus an ARMA(1,1) model provides a good model fit.
+
+When the Ljung Box test is applied to the residuals of an ARIMA model,
+the degrees of freedom must be equal to m-p-q-1, where where m is the
+time lag, and p and q are the number of parameters in the ARIMA(p,q)
+model. The automated df by R is therefore (20-2)=17.
+
+###{y}
+
+##Jarque Bera Test
+
+The Jarque-Bera test is a goodness-of-fit test that determines whether
+or not sample data have skewness and kurtosis that matches a normal
+distribution. Therefore, we are testing against the null hypothesis that
+the residuals are normally distributed (i.e white noise) at the 5%
+significance level. If the p-value \< 0.05, we reject the null that the
+residuals are white noise.
+
+            H0= Residuals are normally distributed (i.e white noise)
+            H1= Residuals are not normally distributed (i.e not white noise)
+            
+
+###{Spread}
+
+###{y}
 
 ``` r
 AR1_y <- forecast::Arima(TS_y,c(1,0,0))
