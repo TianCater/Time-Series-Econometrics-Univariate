@@ -18,7 +18,7 @@ The analysis for each series will be structured as follows:
   3.1. Congruent. 
        Require the residuals to be white noise. Autocorrelation test (Ljung Box test) and normality (Jarque-Bera test).
   3.2. Parsimonious 
-       The first requirement is that the estimates be statistically significant. 
+       The minimum requirement is that the estimates be statistically significant. Then select the fitted model with the lowest AIC and BIC values, this model is the then        the most parsimonious.
 4. Conclude with the estimated results of the BULSM.
 
 ##Importing and structuring the data
@@ -64,7 +64,7 @@ TS_y <-  ts(y,start=c(1984,1,1),end = c(2001,8,1),frequency = 12)
 
 
 
-############################{Spread}#########################
+############################{Spread}######################################################################################################################################
 
 1. Present basic first step analysis. (Plot, ACF, PACF with interpretations and conclusions)
 
@@ -78,7 +78,7 @@ forecast::tsdisplay(TS_spread)
 ```
 
 
-2. Investigate the following models for potential BULSM: AR(1), AR(2), MA(2), ARMA(1,1), ARMA(2,1). This includes selecting the best model according to the AIC    & BIC measures.
+2. Investigate the following models for potential BULSM: AR(1), AR(2), MA(2), ARMA(1,1), ARMA(2,1). This includes selecting the best model according to the AIC & BIC measures.
 
 ```{r Investigating and fitting different models for each process}
 
@@ -183,7 +183,7 @@ The corelogram (ACF) of the residuals does indeed look like a realisation of dis
 
 The Ljung Box test  is a way to test for the absence of serial autocorrelation, up to a specified lag k. Therefore the bigger the lag the better- not sure about this.
 
-The test determines whether or not errors are iid (i.e. white noise) or whether there is something more behind them; whether or not the autocorrelations for the errors or residuals are non zero. Essentially, it is a test of lack of fit: if the autocorrelations of the residuals are very small, we say that the model doesn’t show ‘significant lack of fit’.
+The test determines whether or not errors are iid (i.e. white noise) or whether there is something more behind them; whether or not the autocorrelation for the errors or residuals are non zero. Essentially, it is a test of lack of fit: if the autocorrelation of the residuals are very small, we say that the model doesn’t show ‘significant lack of fit’.
 
                  H0= No serial correlation between residuals (independence)
                  H1= Serial correlation between residuals (dependence)
@@ -192,11 +192,9 @@ The test determines whether or not errors are iid (i.e. white noise) or whether 
             
 A p-value > 0.05 means we fail to reject the null at the. Since the p-value is greater than 0.05,  the residuals are independent at the 95% level and thus an ARMA(1,1) model provides a good model fit (by the measure of autocorrelation between residuals).
 
-When the Ljung Box test is applied to the residuals of an ARIMA model, the degrees of freedom  must be equal to m-p-q-1, where where m is the time lag, and p and q are the number of parameters in the ARIMA(p,q) model. The automated df by R is therefore (20-2)=17.
+When the Ljung Box test is applied to the residuals of an ARIMA model, the degrees of freedom  must be equal to m-b, where where m is the time lag, and b the number of estimated parameters in the ARIMA(p,q) model. Thankfully, R selects the correct df by default. 
 
-###{y}
 
-The p-value=0.373 > 0.05 means we fail to reject the null. Therefore the residuals are independent at the 95% level and thus an ARMA(1,1) model provides a good model fit (by the measure of autocorrelation between residuals).
        
        
 ##Jarque Bera Test (i.i.d - the identically distributed part)
@@ -205,8 +203,8 @@ The Jarque-Bera test is a goodness-of-fit test that determines whether or not sa
 
 Therefore, we are testing against the null hypothesis that the residuals are normally distributed (i.e white noise) at the 5% significance level. If the p-value < 0.05, we reject the null that the residuals are white noise. 
 
-            H0= Residuals are normally distributed (i.e white noise)
-            H1= Residuals are not normally distributed (i.e not white noise)
+            H0= Residuals are normally distributed
+            H1= Residuals are not normally distributed 
             
 
 
@@ -219,11 +217,11 @@ The p-value = 0.003976 < 0.05 means we reject the null hypothesis at the 5% sign
        
        
   3.2. Parsimonious 
-       The first requirement is that the estimates be statistically significant. 
+       The first requirement is that the estimates be statistically significant. Then select the fitted model with the lowest AIC and BIC values, this model is the then         the most parsimonious.
 4. Conclude with the estimated results of the BULSM.
 
 
-############################{y}##############################
+############################{y}###########################################################################################################################################
 
 1. Present basic first step analysis. (Plot, ACF, PACF with interpretations and conclusions)
 
@@ -236,7 +234,7 @@ forecast::tsdisplay(TS_y)
 ```
 
 
-2. Investigate the following models for potential BULSM: AR(1), AR(2), MA(2), ARMA(1,1), ARMA(2,1). This includes selecting the best model according to the AIC    & BIC measures.
+2. Investigate the following models for potential BULSM: AR(1), AR(2), MA(2), ARMA(1,1), ARMA(2,1). This includes selecting the best model according to the AIC & BIC measures.
 
 
 ```{r }
@@ -340,7 +338,7 @@ jarque.bera.test(residuals(AR1_y))
 
 ```
        
-##Ljung Box Test (i.i.d- the independent part)
+##Ljung Box Test
 
 The Ljung Box test  is a way to test for the absence of serial autocorrelation, up to a specified lag k. Therefore the bigger the lag the better- not sure about this.
 
@@ -353,14 +351,14 @@ The test determines whether or not errors are iid (i.e. white noise) or whether 
 The p-value=0.373 > 0.05 means we fail to reject the null. Therefore the residuals are independent at the 95% level and thus an ARMA(1,1) model provides a good model fit (by the measure of autocorrelation between residuals).
 
 
-##Jarque Bera Test (i.i.d - the identically distributed part)
+##Jarque Bera Test 
 
 The Jarque-Bera test is a goodness-of-fit test that determines whether or not sample data have skewness and kurtosis that matches a normal distribution. A normal distribution has a skew of zero (i.e. it’s perfectly symmetrical around the mean) and a kurtosis of three; kurtosis tells you how much data is in the tails and gives you an idea about how “peaked” the distribution is.
 
 Therefore, we are testing against the null hypothesis that the residuals are normally distributed (i.e white noise) at the 5% significance level. If the p-value < 0.05, we reject the null that the residuals are white noise. 
 
-            H0= Residuals are normally distributed (i.e white noise)
-            H1= Residuals are not normally distributed (i.e not white noise)
+            H0= Residuals are normally distributed 
+            H1= Residuals are not normally distributed 
             
 
 
@@ -369,7 +367,7 @@ The p-value = 0.4045 > 0.05 means we fail to reject the null at the 5% significa
       
        
   3.2. Parsimonious 
-       The first requirement is that the estimates be statistically significant. 
+       The minimum requirement is that the estimates be statistically significant. Then select the fitted model with the lowest AIC and BIC values, this model is the then        the most parsimonious.
        
        
        

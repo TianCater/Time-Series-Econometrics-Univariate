@@ -29,7 +29,7 @@ DF1 <- read_excel("data/TSexercise1data.xlsx")
 
 #load required packages
 
-pacman::p_load(dplyr,stats,fixest, tidyverse, huxtable, hrbrthemes, modelsummary, glue,forecast)
+pacman::p_load(dplyr,stats,fixest, tidyverse, huxtable, hrbrthemes, modelsummary, glue,forecast, FinTS)
 
 #Isolate columns as numeric vectors/variables
 
@@ -279,6 +279,16 @@ Res1 <- forecast::checkresiduals(ARMA11, lag = 20)
 ``` r
 pacman::p_load(tseries)
 
+ArchTest(residuals(ARMA11))
+```
+
+    ## 
+    ##  ARCH LM-test; Null hypothesis: no ARCH effects
+    ## 
+    ## data:  residuals(ARMA11)
+    ## Chi-squared = 24.014, df = 12, p-value = 0.02025
+
+``` r
 jarque.bera.test(residuals(ARMA11))
 ```
 
@@ -584,6 +594,18 @@ Res2 <- forecast::checkresiduals(AR1_y, lag=20)
 ``` r
 pacman::p_load(tseries)
 
+pacman::p_load(FinTS)
+
+ArchTest(residuals(AR1_y))
+```
+
+    ## 
+    ##  ARCH LM-test; Null hypothesis: no ARCH effects
+    ## 
+    ## data:  residuals(AR1_y)
+    ## Chi-squared = 11.288, df = 12, p-value = 0.5044
+
+``` r
 jarque.bera.test(residuals(AR1_y))
 ```
 
@@ -636,8 +658,9 @@ The p-value = 0.4045 \> 0.05 means we fail to reject the null at the 5%
 significance level. That is, the residuals are white noise
 
 3.2. Parsimonious The first requirement is that the estimates be
-statistically significant. 4. Conclude with the estimated results of the
-BULSM.
+statistically significant.
+
+4.  Conclude with the estimated results of the BULSM.
 
 ###I will now use the auto.Arima() function. The auto.arima() function
 in R uses a variation of the Hyndman-Khandakar algorithm (Hyndman &
@@ -699,6 +722,16 @@ forecast::checkresiduals(ARMA31_11, lag = 20)
     ## Q* = 19.45, df = 14, p-value = 0.1485
     ## 
     ## Model df: 6.   Total lags used: 20
+
+``` r
+ArchTest(residuals(ARMA31_11))
+```
+
+    ## 
+    ##  ARCH LM-test; Null hypothesis: no ARCH effects
+    ## 
+    ## data:  residuals(ARMA31_11)
+    ## Chi-squared = 23.677, df = 12, p-value = 0.0225
 
 ``` r
 pacman::p_load(tseries)
