@@ -40,7 +40,7 @@ DF1 <- read_excel("data/TSexercise1data.xlsx")
 
 #load required packages
 
-pacman::p_load(dplyr,stats,fixest, tidyverse, huxtable, hrbrthemes, modelsummary, glue,forecast, FinTS)
+pacman::p_load(dplyr,stats,fixest, tidyverse, huxtable, hrbrthemes, modelsummary, glue,forecast, FinTS, lmtest)
 
 #Isolate columns as numeric vectors/variables
 
@@ -174,9 +174,7 @@ Congruence requires the residuals to be white noise and normally distributed. Te
 
 AR1_y <- forecast::Arima(TS_y,c(1,0,0))
 
-AR1_y
 
-coeftest(AR1_y)
 
 ```
 
@@ -252,6 +250,13 @@ For the y process, the AR(1) model satisfies the necessary requirements for cong
       
        
  3.2. Parsimonious 
+ 
+```{r coefficient test}
+
+coeftest(AR1_y)
+
+```
+ 
   
 The minimum requirement is that the estimates be statistically significant. Then select the fitted model with the lowest AIC and BIC values, this model is then the most parsimonious. All these requirements are met.
        
@@ -366,13 +371,9 @@ Congruence requires the residuals to be white noise and normally distributed. Au
        
 ```{r}
 
-pacman::p_load(lmtest)
+
 
 ARMA11 <- forecast::Arima(TS_spread,c(1,0,1))
-
-ARMA11
-
-coeftest(ARMA11)
 
 ```
 
@@ -443,40 +444,44 @@ Therefore, we are testing against the null hypothesis that the residuals are nor
 
 The p-value = 0.003976 > 0.05 means we reject the null at the 5% significance level. That is, the residuals are not normally distributed.
 
-
-  3.1.4. Conclusion
-
+ 3.1.4. Conclusion
  
-
-      
-       
+ The ARMA(1,1) is clearly not congruent as the residuals possess ARCH effects and are non-normally distributed.
+ 
  3.2. Parsimonious 
+ 
+```{r parsimonious}
+
+coeftest(ARMA11)
+
+```
+ 
   
 The minimum requirement is that the estimates be statistically significant. Then select the fitted model with the lowest AIC and BIC values, this model is the then       the most parsimonious. 
 
 Even though the model is clearly not adequate (not congruent), it does fit the minimum requirement for parsimony of statistically significant estimates, and has the lowest AIC and BIC values between the pool of ARIMA models considered. The correct wording would be to say that, within the pool of ARIMA models considered, the ARMA(1,1) model is the most parsimonious. 
        
-  3.2.1. Conclusion 
+ 3.3. Conclusions  
   
+The ARMA(1,1) model, even though parsimonious, is not congruent and therefore not adequate. More specifically, the residuals are not normally distributed (and thus are heteroskedastic). By conducting the same tests for the other pool of possible best fit ARIMA models, all of them fails to be congruent. The questions then arises, what to do when you have heteroskedastic residuals? or non normally distributed residuals? Can data manipulation solve this issue? What about seasonality?
 
+The first step would most probably be to fit an ARCH/GARCH model, however, given that the course has not yet reviewed these topics we refrain from doing so.
+
+
+However, lets see what the auto.Arima() function in R says is the best fit ARIMA model, and to include searches for seasonal ARMA models to hopefully help me understand the above mentioned questions:
   
-  
-4. Conclude with the estimated results of the BULSM.
+I will now use the auto.Arima() function. The auto.arima() function in R uses a variation of the Hyndman-Khandakar algorithm (Hyndman & Khandakar, 2008), which combines unit root tests, minimisation of the AICc and MLE to obtain an ARIMA model. 
 
 
-
-###I will now use the auto.Arima() function. The auto.arima() function in R uses a variation of the Hyndman-Khandakar algorithm (Hyndman & Khandakar, 2008), which combines unit root tests, minimisation of the AICc and MLE to obtain an ARIMA model. 
-
-
-```{r a second attemp for spread}
+```{r a second attempt for spread}
 
 AA_spread <- auto.arima(TS_spread, seasonal= TRUE,stationary = TRUE, stepwise = TRUE, approximation = FALSE, allowdrift = TRUE)
 AA_spread
 
 ```
-According to the Hyndman-Khandakar algorithm (Hyndman & Khandakar, 2008), the best model fit (provided the criterion that they are stationary) would be an seasonal ARMA(3,1)(1,1) model. Therefore 
+According to the Hyndman-Khandakar algorithm (Hyndman & Khandakar, 2008), the best model fit (provided the criterion that they are stationary) would be an seasonal ARMA(3,0)(1,1) model. Therefore 
 
-We select the seasonal ARMA(3,1)(1,1) model and accordingly conduct the required tests for adequacy.
+We select the seasonal ARMA(3,0)(1,1) model and accordingly conduct the required tests for adequacy.
 
 ```{r}
 ARMA31_11 <-  forecast::Arima(TS_spread, order=c(3,0,0), seasonal = c(1,0,1))
@@ -492,7 +497,7 @@ pacman::p_load(tseries)
 jarque.bera.test(residuals(ARMA31_11))
 ```
 
-
+Even with the proclaimed seasonal ARMA(3,0)(1,1), the residuals has ARCH effects and are non normally distributed. It seems therefore that the appropraite next step would indeed be to evaluate fitting ARCH/GARCH models. 
 
 
 
