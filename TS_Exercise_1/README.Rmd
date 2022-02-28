@@ -87,6 +87,12 @@ forecast::tsdisplay(TS_y)
 ```
 
 
+1.1. Interpretations and conclusions
+
+For the ACF of y, visually, it has an oscillating decay towards zero. Additionally, the PACF significantly spikes at lag 1, with the PACF remaining within the bandwidth for lags larger than 1  Therefore, by visual interpretation I postulate that the y process' best fit is an AR(1) model, since the spike in the PACF occurs at the first lag, and nowhere else. 
+
+
+
 2. Investigate the following models for potential BULSM: AR(1), AR(2), MA(2), ARMA(1,1), ARMA(2,1). This includes selecting the best model according to the AIC & BIC measures.
 
 
@@ -294,6 +300,12 @@ forecast::tsdisplay(TS_spread)
 
 
 ```
+
+
+1.1. Interpretations and conclusions 
+
+The ACF for the spread process visually showcases an oscillating decay, whereas the PACF has multiple spikes outside of the bandwidth (these multiple spikes makes visually postulating a best fit model a difficult task). However, if an ARMA(p,q) model was the best fit, then the ACF would decay (either direct or oscillatory) beginning from lag q, and the PACF would decay (either direct or oscillatory) beginning from lag q. Therefore form this initial visual interpretation, an ARMA(1,1) model seems like a possible best fit, however, the randomness in the spikes of the PACF makes this process uncertain. 
+
 
 
 2. Investigate the following models for potential BULSM: AR(1), AR(2), MA(2), ARMA(1,1), ARMA(2,1). This includes selecting the best model according to the AIC & BIC measures.
