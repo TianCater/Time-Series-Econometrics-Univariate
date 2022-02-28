@@ -12,14 +12,19 @@ The analysis for each series will be structured as follows:
 1.  Present basic first step analysis. (Plot, ACF, PACF with
     interpretations and conclusions)
 
+1.1. Interpretation and conclusions
+
 2.  Investigate the following models for potential BULSM: AR(1), AR(2),
     MA(2), ARMA(1,1), ARMA(2,1). This includes selecting the best model
     according to the AIC & BIC measures.
 
-3.  Evaluate whether the selected model is adequate. That is, whether
-    the selected model is both:
+2.1.
 
-3.1. Congruent.
+3.  Evaluate whether the selected model is adequate. That is, whether
+    the selected model is both congruant and parsimonious:
+
+3.1. Congruent. 3.1.1. Ljung Box test 3.1.2. ARCH LM test 3.1.3. Jarque
+Bera test 3.1.4. Conclusions
 
 Requiress the residuals to be white noise and normally distributed.
 Autocorrelation test (Ljung Box test), ARCH test (ARCH LM test), and
@@ -33,8 +38,6 @@ values, this model is the then the most parsimonious.
 
 4.  Conclude with the estimated results of the BULSM.
 
-#Importing and structuring the data
-
 ———{y}———–
 
 1.  Present basic first step analysis. (Plot, ACF, PACF with
@@ -47,6 +50,15 @@ forecast::tsdisplay(TS_y)
 ```
 
 ![](README_files/figure-gfm/Plot%20ACF%20and%20PACF-1.png)<!-- -->
+
+1.1. Interpretations and conclusions
+
+For the ACF of y, visually, it has an oscillating decay towards zero.
+Additionally, the PACF significantly spikes at lag 1, with the PACF
+remaining within the bandwidth for lags larger than 1 Therefore, by
+visual interpretation I postulate that the y process’ best fit is an
+AR(1) model, since the spike in the PACF occurs at the first lag, and
+nowhere else.
 
 2.  Investigate the following models for potential BULSM: AR(1), AR(2),
     MA(2), ARMA(1,1), ARMA(2,1). This includes selecting the best model
@@ -213,6 +225,8 @@ summary(ARMA21_y)
     ##                      ACF1
     ## Training set 0.0007207667
 
+2.1. Interpretation
+
 Visually, the majority of the models seem to fit rather well. However,
 the AR(1) model has the lowest AIC and BIC values (205.09 and 215.16,
 respectively). Therefore, by this measure we preliminary select this
@@ -259,10 +273,7 @@ m-b, where where m is the time lag, and b the number of estimated
 parameters in the ARIMA(p,q) model. Thankfully, R selects the correct df
 by default.
 
-The test determines whether or not errors are white noise or whether
-there is something more behind them; whether or not the autocorrelations
-for the errors or residuals are non zero. The underlying hypothesis test
-is given by:
+The underlying hypothesis test is given by:
 
             H0= No serial correlation between residuals (independence)
             H1= Serial correlation between residuals (dependence)       
@@ -288,7 +299,7 @@ ArchTest(residuals(AR1_y))
     ## data:  residuals(AR1_y)
     ## Chi-squared = 11.288, df = 12, p-value = 0.5044
 
-The ARCH LM test indicates whether the residuals are homoskedastistic.
+The ARCH LM test indicates whether the residuals are homoskedastistic:
 
             H0= No ARCH effects 
             H1= ARCH effects
@@ -328,7 +339,7 @@ are normally distributed at the 5% significance level:
 The p-value = 0.4045 \> 0.05 means we fail to reject the null at the 5%
 significance level. That is, the residuals are normally distributed.
 
-3.1.3. Conclusion
+3.1.4. Conclusion
 
 For the y process, the AR(1) model satisfies the necessary requirements
 for congruence.
@@ -376,6 +387,18 @@ forecast::tsdisplay(TS_spread)
 ```
 
 ![](README_files/figure-gfm/Plot%20ACF%20PACF-1.png)<!-- -->
+
+1.1. Interpretations and conclusions
+
+The ACF for the spread process visually showcases an oscillating decay,
+whereas the PACF has multiple spikes outside of the bandwidth (these
+multiple spikes makes visually postulating a best fit model a difficult
+task). However, if an ARMA(p,q) model was the best fit, then the ACF
+would decay (either direct or oscillatory) beginning from lag q, and the
+PACF would decay (either direct or oscillatory) beginning from lag q.
+Therefore form this initial visual interpretation, an ARMA(1,1) model
+seems like a possible best fit, however, the randomness in the spikes of
+the PACF makes this process uncertain.
 
 2.  Investigate the following models for potential BULSM: AR(1), AR(2),
     MA(2), ARMA(1,1), ARMA(2,1). This includes selecting the best model
@@ -532,6 +555,8 @@ summary(ARMA21)
     ##                       ME      RMSE        MAE  MPE MAPE      MASE        ACF1
     ## Training set 7.86675e-06 0.1228064 0.09106651 -Inf  Inf 0.2703474 0.001325205
 
+2.1. Interpretations and conclusions
+
 Visually, it is difficult (or near impossible in this case) to state
 which ARMA model is the best fit .However, the ARMA(1,1) model has the
 lowest AIC and BIC values (-277.2 and -263.77, respectively), and by
@@ -579,10 +604,7 @@ m-b, where where m is the time lag, and b the number of estimated
 parameters in the ARIMA(p,q) model. Thankfully, R selects the correct df
 by default.
 
-The test determines whether or not errors are white noise or whether
-there is something more behind them; whether or not the autocorrelations
-for the errors or residuals are non zero. The underlying hypothesis test
-is given by:
+The underlying hypothesis test is given by:
 
             H0= No serial correlation between residuals (independence)
             H1= Serial correlation between residuals (dependence)       
@@ -606,7 +628,7 @@ ArchTest(residuals(ARMA11))
 
 3.1.2. ARCH LM test (Heteroskedasticity)
 
-The ARCH LM tests whether the residuals are homoskedastistic.
+The ARCH LM tests whether the residuals are homoskedastistic:
 
             H0= No ARCH effects 
             H1= ARCH effects
